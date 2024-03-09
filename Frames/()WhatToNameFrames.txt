@@ -1,0 +1,8 @@
+Keep in mind if one is missing in the frame0.png, frame1.png, frame2.png, frame3.png, etc chain or named differently it will stop before that and not continue as it works just by:
+
+name, number, ext = "Frames/frame", 0, ".png"
+while os.path.exists(f"{name}{number}{ext}"):
+  images.append(get_edges(Image.open(f"{name}{number}{ext}")))
+  number += 1
+
+, so the names do have to follow the trend starting at "frame0.png"
