@@ -1,2 +1,16 @@
 # BadAppleMazeSolutions
- 
+
+This is the code for the algorithm used to make this video - [https://www.youtube.com/watch?v=3pf622xonIg&lc=UgxNrMcVf0AziyywirZ4AaABAg](https://youtu.be/3pf622xonIg?si=smtwJlUop0krukhh)
+
+A few warnings, the code is not good, I wrote it very quickly after I saw the maze on twitter and originally it just solved the maze.
+Because of this the structure and overall coding is pretty bad but it works and that's all I was going for.
+
+It works by taking in the bad apple frames from a folder and then using Pillow to manipulate the frames in ways such as FIND_EDGES (since the maze only draws lines since colouring in would be even slower and messier), and making the maze image (modified to be a bit nicer for it to search, such as removing grey) into a networkx Graph. Then it looks through the images and gets a list of the pixels found with the edge detection (not getting pixels right near each other to be a lot nicer on the search). Finally it uses networkx A-star to go to each of the points (and points around it to make the image clear amongst the many lines) then to the end of the maze.
+The slowest part is of course the A-star, so a lot of the speeds of other stuff pale in comparison, so most things where to reduce how much the code had to do A-star stuff (such as not travelling to already found nodes by keeping a seperate graph that would have searched to nodes removed).
+
+## A few things of note about it:
+- The alogorithm looks through the maze in 2x2 chunks since the entirerty of the maze fits/works out mostly within this constraint and it maaaaasifly reduces the size of the graph and therefore improves the speed of the A-star.
+- Because finding the start and end colours I added is slow by iterating through and I didn't want to go through this everytime (even though this and turning the maze into a graph is ofc overhead that only needs to be done once and not for all images), the code actually encodes the start and end position in binary in the bottom left of the maze (you can soooooort of see this in the bottom left of the video but it's very small). The binary is just red but with slightly different opacities for ones and zeros, as checking to see if the binary exists and reading it is a lot faster than going through until the start and end colours are found.
+- The very idea of just going to every node with A-star is pretty flawed and there will be much better ways to go about this with simple graph theory, as said this was just quick and for fun, I wasn't going to release the code but quite a few people asked so I decided to.
+- I have included the edited maze (with the start and end colours and the binary in the bottom left, if the binary is removed the maze will search for the start and end again and re-add the binary), and the folder with the 658 result frames I generated, and the frames used to generate them. I actually made an algorithm to name all the frames to what format is needed and this backfired cause of a typo and I ended up with hundreds of bad apple images on my desktop lmao.
+- When the algorithm finishes creating the maze graph it will save an image of the route it made called Seached.png, which has magenta as the paths it found and cyan as the walls, this was to make sure it found the routes and didn't miss any big sections after the purging of gray tiles, but I think it looks pretty cool lol.
